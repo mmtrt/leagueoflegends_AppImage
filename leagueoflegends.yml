@@ -1,0 +1,153 @@
+version: 1
+
+script:
+  - rm -rf AppDir || true
+  # Add game icon
+  - mkdir -p AppDir/usr/share/icons
+  - wget -q "https://github.com/mmtrt/leagueoflegends/raw/master/snap/gui/leagueoflegends.png" -P AppDir/usr/share/icons
+  # Add winetricks
+  - wget -q -nc "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -P ./AppDir/bin && chmod +x ./AppDir/bin/winetricks
+  - cp wrapper AppDir ; cp leagueoflegends.desktop AppDir
+
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: leagueoflegends
+    name: leagueoflegends
+    icon: leagueoflegends
+    version: !ENV ${BUILD_VER}
+    exec: bin/bash
+    exec_args: wrapper $@
+
+  apt:
+    arch: [amd64, i386]
+    sources:
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar-updates main restricted universe multiverse'
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar-backports main restricted universe multiverse'
+        key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x871920D1991BC93C'
+      - sourceline: 'deb https://ppa.launchpadcontent.net/oibaf/graphics-drivers/ubuntu lunar main'
+        key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x957D2708A03A4626'
+
+    include:
+      - bash
+      - cabextract
+      - dash
+      - libfreetype6
+      - perl
+      - coreutils
+      - mesa-utils
+      - mesa-utils-bin
+      - vulkan-tools
+      - libmspack0
+      - yad
+      - winbind
+      - gstreamer1.0-plugins-good:i386
+      - gstreamer1.0-plugins-bad:i386
+      - gstreamer1.0-plugins-ugly:i386
+
+  files:
+    exclude:
+      - sbin
+      - var
+      - etc/alternatives
+      - etc/apt
+      - etc/cron.daily
+      - etc/dpkg
+      - etc/mysql
+      - etc/sane.d
+      - etc/sensors.d
+      - etc/skel
+      - etc/snmp
+      - etc/udev
+      - etc/gss
+      - etc/init.d
+      - etc/logrotate.d
+      - lib/modprobe.d
+      - lib/systemd
+      - lib/udev
+      - usr/lib/mime
+      - usr/lib/sasl2
+      - usr/lib/tmpfiles.d
+      - usr/sbin
+      - usr/share/apps
+      - usr/share/man
+      - usr/share/doc
+      - usr/share/adduser
+      - usr/share/apport
+      - usr/share/Adwaita
+      - usr/share/bash-completion
+      - usr/share/bug
+      - usr/share/debconf
+      - usr/share/doc
+      - usr/share/doc-base
+      - usr/share/dpkg
+      - usr/share/glib-2.0
+      - usr/share/gst-plugins-base
+      - usr/share/hal
+      - usr/share/icons/Humanity
+      - usr/share/icons/Humanity-Dark
+      - usr/share/icons/ubuntu-mono-light
+      - usr/share/icons/ubuntu-mono-dark
+      - usr/share/info
+      - usr/share/initramfs-tools
+      - usr/share/kde4
+      - usr/share/libgphoto2
+      - usr/share/lintian
+      - usr/share/menu
+      - usr/share/metainfo
+      - usr/share/mesa-demos
+      - usr/share/mime
+      - usr/share/misc
+      - usr/share/mysql-common
+      - usr/share/pixmaps
+      - usr/share/pkgconfig
+      - usr/share/polkit-1
+      - usr/share/snmp
+      - usr/share/sounds
+      - usr/share/zoneinfo
+      - usr/share/zoneinfo-icu
+      - usr/share/zsh
+      - opt/wine-devel
+      - opt/wine-staging/share/man
+      - opt/wine-staging/share/applications
+      - opt/wine-staging/lib/wine/i386-unix/*.a
+      - opt/wine-staging/lib/wine/i386-windows/*.a
+      - opt/wine-staging/lib64/wine/x86_64-unix/*.a
+      - opt/wine-staging/lib64/wine/x86_64-windows/*.a
+
+  after_bundle:
+    # this is executed after the packages and files are added
+    - |
+     wget -q "https://github.com/$(wget -qO- https://github.com/GloriousEggroll/wine-ge-custom/releases/expanded_assets/$(wget -qO- "https://github.com/GloriousEggroll/wine-ge-custom/releases?page=1" | grep -Eo "tree/7.*" | head -1 | sed 's|/| |g;s|"| |g'|awk '{print $2}') | grep tar.xz | sed 's|"| |g' | awk '{print $3}' | head -1)"
+     mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv lutris* wine-staging ; rm ../../*.tar.xz)
+     (cd AppDir/usr/bin; ln -s "../../opt/wine-staging/bin/"* .)
+
+     # Cleanup
+     rm -rf AppDir/usr/share/{applications,man,doc}
+     rm -rf AppDir/opt/wine-staging/share/{applications,man,doc}
+     rm -rf AppDir/opt/wine-staging/lib/wine/i386-unix/*.a
+     rm -rf AppDir/opt/wine-staging/lib/wine/i386-windows/*.a
+     rm -rf AppDir/opt/wine-staging/lib64/wine/x86_64-unix/*.a
+     rm -rf AppDir/opt/wine-staging/lib64/wine/x86_64-windows/*.a
+
+     # Disable FileOpenAssociations
+     sed -i 's|    LicenseInformation|    LicenseInformation,\\\n    FileOpenAssociations|g;$a \\n[FileOpenAssociations]\nHKCU,Software\\Wine\\FileOpenAssociations,"Enable",,"N"' AppDir/opt/wine-staging/share/wine/wine.inf
+
+     # Disable winemenubuilder
+     sed -i 's|    FileOpenAssociations|    FileOpenAssociations,\\\n    DllOverrides|;$a \\n[DllOverrides]\nHKCU,Software\\Wine\\DllOverrides,"*winemenubuilder.exe",,""' AppDir/opt/wine-staging/share/wine/wine.inf
+     sed -i '/\%11\%\\winemenubuilder.exe -a -r/d' AppDir/opt/wine-staging/share/wine/wine.inf
+
+  runtime:
+    env:
+      APPDIR_LIBC_VERSION: '2.37'
+
+    path_mappings:
+    - /opt/wine-staging:$APPDIR/opt/wine-staging
+
+AppImage:
+  update-information: gh-releases-zsync|mmtrt|leagueoflegends_AppImage|test|leagueoflegends*.AppImage.zsync
+  #sign-key: None
+  arch: x86_64
+

@@ -1,0 +1,10 @@
+[Desktop Entry]
+X-AppImage-Integrate=false
+Name=leagueoflegends
+Exec=bin/bash
+Icon=leagueoflegends
+Type=Application
+Terminal=false
+Categories=Game;
+StartupWMClass=LeagueClient.exe;RiotClientServices.exe;
+Keywords=game
