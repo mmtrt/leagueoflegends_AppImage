@@ -1,0 +1,241 @@
+# APP env
+progName="leagueoflegends"
+progArch="x86_64"
+progVer=
+progHome="$HOME/.$progName"
+progBin="RiotClientServices.exe"
+progCLD="$progHome/drive_c/Riot Games/Riot Client"
+progIcoD="$HOME/.local/share/applications/$progName.desktop"
+
+# WINE env
+export WINEPREFIX=${WINEPREFIX:-"$progHome"}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-staging/bin/wine"}
+
+# DXVK env
+export DXVK_HUD=${DXVK_HUD:-"0"}
+export DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-"none"}
+export DXVK_STATE_CACHE=${DXVK_STATE_CACHE:-"0"}
+export DXVK_CONFIG_FILE=${DXVK_CONFIG_FILE:-"$progHome/dxvk.conf"}
+
+if [ ! -d "$progHome" ];then
+  mkdir -p "$progHome" || exit 1
+fi
+
+dkico() {
+if [[ ! -f $progIcoD ]]; then
+
+cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
+mkdir -p "$HOME/.local/share/applications"
+DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+DesktopFilePathNV="$HOME/.local/share/applications/${progName}nv.desktop"
+
+{
+echo "[Desktop Entry]"
+echo "Name=League of Legends (AppImage)"
+echo "Exec=${OWD}/${progName}-${progVer}-${progArch}.AppImage"
+echo "Icon=$progName"
+echo "Type=Application"
+echo "Terminal=false"
+echo "Categories=Game;"
+echo "StartupWMClass=LeagueClient.exe;RiotClientServices.exe;League of Legends.exe;"
+echo "Comment=${progName} AppImage version"
+echo "Keywords=game"
+} >> "$DesktopFilePath"
+
+{
+echo "[Desktop Entry]"
+echo "Name=League of Legends (AppImage) (NVIDIA Optimus)"
+echo "Exec=${OWD}/${progName}-${progVer}-${progArch}.AppImage nvop"
+echo "Icon=$progName"
+echo "Type=Application"
+echo "Terminal=false"
+echo "Categories=Game;"
+echo "StartupWMClass=LeagueClient.exe;RiotClientServices.exe;League of Legends.exe;"
+echo "Comment=${progName} AppImage version"
+echo "Keywords=game"
+} >> "$DesktopFilePathNV"
+fi
+
+if [ -d "$HOME/Desktop" ]; then
+ (cd "$HOME"/Desktop || exit ; ln -s "$DesktopFilePath" "./League of Legends (AppImage)" ; ln -s "$DesktopFilePathNV" "./League of Legends (AppImage) (Nvidia Optimus)")
+fi
+
+}
+
+function install_league() {
+
+function progress_yad() {
+  perl -p -e '$| = 1; s/^.* +([0-9]+%) +([0-9,.]+[GMKB]) +([0-9hms,.]+).*$/\1\n# Downloading Installer... \2 (\3)/' | \
+  GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --progress --title="League of Legends" --width=400 --center --no-buttons --auto-close --auto-kill --on-top --no-escape
+}
+
+function install_na() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.na.exe" -O "/tmp/live.na.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.na.exe" --mode unattended
+}
+
+function install_euw() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.euw.exe" -O "/tmp/live.euw.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.euw.exe" --mode unattended
+}
+
+function install_eune() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.eune.exe" -O "/tmp/live.eune.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.eune.exe" --mode unattended
+}
+
+function install_br() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.br.exe" -O "/tmp/live.br.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.br.exe" --mode unattended
+}
+
+function install_jp() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.jp.exe" -O "/tmp/live.jp.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.jp.exe" --mode unattended
+}
+
+function install_kr() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.kr.exe" -O "/tmp/live.kr.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.kr.exe" --mode unattended
+}
+
+function install_lan() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.la1.exe" -O "/tmp/live.la1.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.la1.exe" --mode unattended
+}
+
+function install_las() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.la2.exe" -O "/tmp/live.la2.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.la2.exe" --mode unattended
+}
+
+function install_oce() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.oc1.exe" -O "/tmp/live.oc1.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.oc1.exe" --mode unattended
+}
+
+function install_ph() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.ph2.exe" -O "/tmp/live.ph2.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.ph2.exe" --mode unattended
+}
+
+function install_ru() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.ru.exe" -O "/tmp/live.ru.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.ru.exe" --mode unattended
+}
+
+function install_sg() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.sg2.exe" -O "/tmp/live.sg2.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.sg2.exe" --mode unattended
+}
+
+function install_tr() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.tr.exe" -O "/tmp/live.tr.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.tr.exe" --mode unattended
+}
+
+function install_tw() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.tw2.exe" -O "/tmp/live.tw2.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.tw2.exe" --mode unattended
+}
+
+function install_vn() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/live.vn2.exe" -O "/tmp/live.vn2.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/live.vn2.exe" --mode unattended
+}
+
+function install_pbe() {
+  wget "https://lol.secure.dyn.riotcdn.net/channels/public/x/installer/current/pbe.pbe.exe" -O "/tmp/pbe.pbe.exe" 2>&1 | progress_yad
+  "$WINELOADER" "/tmp/pbe.pbe.exe" --mode unattended
+}
+
+function install_gsd() {
+ if [ -f "$HOME/snap/leagueoflegends/common/.wine/drive_c/Riot Games/League of Legends/Game/League of Legends.exe" ] || [ -f "$HOME/snap/leagueoflegends/common/.wine/drive_c/Riot Games/Riot Client/RiotClientServices.exe" ]; then
+   rsync -va "$HOME/snap/leagueoflegends/common/.wine/drive_c/Riot Games/" "$progHome/drive_c/Riot Games" | \
+   GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --progress --title="League of Legends" --progress-text="copying game from snap..." --width=400 --center --no-buttons --auto-close --auto-kill --on-top --pulsate
+   sleep 5
+ else
+   notify-send --icon "$APPDIR/$progName.png" --expire-time=15000 "League of Legends" "Failed to copy game!! leagueoflegends is not installed in snap data"
+ fi
+}
+
+action=$(GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --width 410 --entry --title "League of Legends" \
+    --center \
+    --button="Install:0" --button="Exit:1" \
+    --text "Select Game Installer Region | Copy Game From Snap Data (GSD)" \
+    --entry-text \
+    "NA" "EUW" "EUNE" "BR" "JP" "KR" "LAN" "LAS" "OCE" "PH" "RU" "SG" "TR" "TW" "VN" "GSD")
+ret=$?
+
+[[ $ret -eq 1 ]] && exit 0
+
+case $action in
+  NA*) cmd=$(install_na) ;;
+  EUW*) cmd=$(install_euw) ;;
+  EUNE*) cmd=$(install_eune) ;;
+  BR*) cmd=$(install_br) ;;
+  JP*) cmd=$(install_jp) ;;
+  KR*) cmd=$(install_kr) ;;
+  LAN*) cmd=$(install_lan) ;;
+  LAS*) cmd=$(install_las) ;;
+  OCE*) cmd=$(install_oce) ;;
+  PH*) cmd=$(install_ph) ;;
+  RU*) cmd=$(install_ru) ;;
+  SG*) cmd=$(install_sg) ;;
+  TR*) cmd=$(install_tr) ;;
+  TW*) cmd=$(install_tw) ;;
+  VN*) cmd=$(install_vn) ;;
+#       PBE*) cmd=$(install_pbe) ;;
+  GSD*) cmd=$(install_gsd) ;;
+  *) exit 1 ;;
+esac
+
+eval $cmd 2>/dev/null
+
+}
+
+if [ ! -f "$WINEPREFIX/drive_c/windows/explorer.exe" ]; then
+  "$WINELOADER" wineboot -i
+  for i in dxvk vcrun2019 ; do
+   winetricks -q "$i" | GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --progress --title="League of Legends" --progress-text="Installing $i..." --width=400 --center --no-buttons --auto-close --auto-kill --on-top --pulsate ;
+  done
+fi
+
+if [ ! -f "$progCLD/$progBin" ] ; then
+  install_league
+fi
+
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    install_league
+    ;;
+  "install-desktop")
+    dkico
+    ;;
+  "winetricks")
+    for i in "${@:2}" ; do winetricks -q "$i" | GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --progress --title="League of Legends" --progress-text="Installing $i..." --width=400 --center --no-buttons --auto-close --auto-kill --on-top --pulsate ; done
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    "$WINELOADER" "$1" "${@:2}"
+    ;;
+  "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
+    "$1" "${@:2}"
+    ;;
+   "vkcube"|"vkcubepp"|"vkcube-wayland")
+    export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
+    "$1" "${@:2}"
+    ;;
+   "nvop")
+    export __NV_PRIME_RENDER_OFFLOAD="1"
+    export __GLX_VENDOR_LIBRARY_NAME="nvidia"
+    export __VK_LAYER_NV_optimus="NVIDIA_only"
+    "$WINELOADER" "$progCLD/$progBin" --launch-product=league_of_legends --launch-patchline=live
+    ;;
+  *)
+    "$WINELOADER" "$progCLD/$progBin" --launch-product=league_of_legends --launch-patchline=live ; exit 1
+    ;;
+esac
