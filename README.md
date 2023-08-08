@@ -20,7 +20,7 @@ Download the latest release from
 | Stable | Dev |
 | ------- | --------- |
 | <img src="https://github.com/mmtrt/leagueoflegends/raw/master/snap/gui/leagueoflegends.png" height=100> | <img src="https://github.com/mmtrt/leagueoflegends/raw/master/snap/gui/leagueoflegends.png" height=100> |
-| [Download](https://github.com/mmtrt/leagueoflegends_AppImage/releases/tag/continuous-stable) | [Download](https://github.com/mmtrt/leagueoflegends_AppImage/releases/tag/continuous-devel) |
+| [Download](https://github.com/mmtrt/leagueoflegends_AppImage/releases/tag/stable) | [Download](https://github.com/mmtrt/leagueoflegends_AppImage/releases/tag/dev) |
 
 
 ### Executing
