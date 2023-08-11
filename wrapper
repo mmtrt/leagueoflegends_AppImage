@@ -198,7 +198,7 @@ eval $cmd 2>/dev/null
 
 if [ ! -f "$WINEPREFIX/drive_c/windows/explorer.exe" ]; then
   "$WINELOADER" wineboot -i
-  for i in dxvk vcrun2019 ; do
+  for i in dxvk vcrun2019 win10 ; do
    winetricks -q "$i" | GDK_BACKEND=x11 yad --window-icon="$APPDIR/$progName.png" --progress --title="League of Legends" --progress-text="Installing $i..." --width=400 --center --no-buttons --auto-close --auto-kill --on-top --pulsate ;
   done
 fi
