@@ -153,8 +153,8 @@ AppDir:
   after_bundle:
     # this is executed after the packages and files are added
     - |
-     wget -q "https://github.com/$(wget -qO- https://github.com/GloriousEggroll/wine-ge-custom/releases/expanded_assets/$(wget -qO- "https://github.com/GloriousEggroll/wine-ge-custom/releases?page=1" | grep -Eo "tree/.*" | grep L[a-z,A-Z]L | head -1 | sed 's|/| |g;s|"| |g'|awk '{print $2}') | grep tar.xz | sed 's|"| |g' | awk '{print $3}' | head -1)"
-     mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv lutris* wine-staging ; rm ../../*.tar.xz)
+     wget -q "https://github.com/NelloKudo/WineBuilder/releases/download/wine-lol-9.0-rc1/wine-LoL-9.0-rc1-staging-amd64.tar.xz"
+     mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; rm ../../*.tar.xz ; mv wine-LoL* wine-staging )
      (cd AppDir/usr/bin; ln -s "../../opt/wine-staging/bin/"* .)
 
      # Cleanup
