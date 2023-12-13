@@ -11,6 +11,9 @@ script:
 
 AppDir:
   path: ./AppDir
+  runtime:
+      preserve:
+          - opt/wine-staging
 
   app_info:
     id: leagueoflegends
@@ -21,20 +24,20 @@ AppDir:
     exec_args: wrapper $@
 
   apt:
-    arch: [amd64, i386]
+    arch: [amd64]
     sources:
-      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
-      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar-updates main restricted universe multiverse'
-      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ lunar-backports main restricted universe multiverse'
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse'
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse'
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x871920D1991BC93C'
-      - sourceline: 'deb https://dl.winehq.org/wine-builds/ubuntu/ lunar main'
+      - sourceline: 'deb https://dl.winehq.org/wine-builds/ubuntu/ jammy main'
         key_url: 'https://dl.winehq.org/wine-builds/winehq.key'
-      - sourceline: 'deb https://ppa.launchpadcontent.net/oibaf/graphics-drivers/ubuntu lunar main'
+      - sourceline: 'deb https://ppa.launchpadcontent.net/oibaf/graphics-drivers/ubuntu jammy main'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x957D2708A03A4626'
 
     include:
-      - wine-devel-i386=8.8~lunar-1
-      - wine-devel-amd64=8.8~lunar-1
+      # - wine-devel-i386=8.8~jammy-1
+      # - wine-devel-amd64=8.8~jammy-1
       - bash
       - cabextract
       - dash
@@ -45,40 +48,40 @@ AppDir:
       - vulkan-tools
       - libmspack0
       - yad
-      - winbind
-      - gstreamer1.0-plugins-good:i386
-      - gstreamer1.0-plugins-bad:i386
-      - gstreamer1.0-plugins-ugly:i386
-      - libdrm2:i386
-      - libdrm-intel1:i386
-      - libdrm-nouveau2:i386
-      - libdrm-amdgpu1:i386
-      - libdrm-radeon1:i386
-      - libegl-mesa0:i386
-      - libegl1:i386
-      - libgbm1:i386
-      - libgl1:i386
-      - libgl1-mesa-dri:i386
-      - libglapi-mesa:i386
-      - libgles2:i386
-      - libglvnd0:i386
-      - libglx0:i386
-      - libglx-mesa0:i386
-      - mesa-vdpau-drivers:i386
-      - mesa-va-drivers:i386
-      - mesa-vulkan-drivers:i386
-      - libopenal1:i386
-      - libx11-6:i386
-      - libx11-xcb1:i386
-      - libxcb-dri2-0:i386
-      - libxcb-dri3-0:i386
-      - libxcb-glx0:i386
-      - libxcb-present0:i386
-      - libxcb-render0:i386
-      - libxcb-shape0:i386
-      - libxcb-shm0:i386
-      - libxcb-xfixes0:i386
-      - libxcb1:i386
+      # - winbind
+      # - gstreamer1.0-plugins-good:i386
+      # - gstreamer1.0-plugins-bad:i386
+      # - gstreamer1.0-plugins-ugly:i386
+      # - libdrm2:i386
+      # - libdrm-intel1:i386
+      # - libdrm-nouveau2:i386
+      # - libdrm-amdgpu1:i386
+      # - libdrm-radeon1:i386
+      # - libegl-mesa0:i386
+      # - libegl1:i386
+      # - libgbm1:i386
+      # - libgl1:i386
+      # - libgl1-mesa-dri:i386
+      # - libglapi-mesa:i386
+      # - libgles2:i386
+      # - libglvnd0:i386
+      # - libglx0:i386
+      # - libglx-mesa0:i386
+      # - mesa-vdpau-drivers:i386
+      # - mesa-va-drivers:i386
+      # - mesa-vulkan-drivers:i386
+      # - libopenal1:i386
+      # - libx11-6:i386
+      # - libx11-xcb1:i386
+      # - libxcb-dri2-0:i386
+      # - libxcb-dri3-0:i386
+      # - libxcb-glx0:i386
+      # - libxcb-present0:i386
+      # - libxcb-render0:i386
+      # - libxcb-shape0:i386
+      # - libxcb-shm0:i386
+      # - libxcb-xfixes0:i386
+      # - libxcb1:i386
 
   files:
     exclude:
@@ -173,10 +176,6 @@ AppDir:
      sed -i '/\%11\%\\winemenubuilder.exe -a -r/d' AppDir/opt/wine-staging/share/wine/wine.inf
 
   runtime:
-    env:
-      LIBGL_DRIVERS_PATH: '${APPDIR}/usr/lib/i386-linux-gnu/dri:${APPDIR}/usr/lib/x86_64-linux-gnu/dri:${LIBGL_DRIVERS_PATH}'
-      APPDIR_LIBC_VERSION: '2.38'
-
     path_mappings:
     - /opt/wine-staging:$APPDIR/opt/wine-staging
 
